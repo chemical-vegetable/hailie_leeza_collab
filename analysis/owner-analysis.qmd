@@ -35,6 +35,26 @@ names(lobster_abundance)
 str(lobster_abundance)
 
 summary(lobster_abundance)
+
+unique(lobster_abundance$SIZE_MM)
 ```
+
+fix -99999 values to show na in the `SIZE_MM` column
+```{r}
+lobster_abundance <- lobster_abundance %>% 
+  mutate(SIZE_MM = na_if(SIZE_MM, -99999.0))
+
+unique(lobster_abundance$SIZE_MM)
+```
+
+create lobsters subset
+```{r}
+lobster_abundance_subset <- lobster_abundance %>% 
+  filter(SITE == "AQUE", SIZE_MM >= 70)
+
+head(lobster_abundance_subset)
+range(lobster_abundance_subset$SIZE_MM)
+```
+
 
 
