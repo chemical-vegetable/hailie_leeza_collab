@@ -26,8 +26,27 @@ glimpse(lobster_traps)
 head(lobster_traps)
 ```
 
+## Convert missing values using `mutate()` and `na_if()`
+```{r}
 
+lobster_traps_clean <- lobster_traps %>% 
+  mutate(TRAPS = na_if(TRAPS, -99999))
 
+unique(lobster_traps_clean$TRAPS)
+```
+
+## `filter()` practice
+```{r}
+not_napl <- lobster_traps_clean %>% 
+  filter(SITE != "NAPL")
+head(not_napl)
+```
+* create and store a subset with lobsters at CARP or number of commercial trap floats is greater than 20
+```{r}
+lobster_traps_subset <- lobster_traps_clean %>% 
+  filter(SITE == "CARP", TRAPS > 20)
+head(lobster_traps_subset)
+```
 
 
 
