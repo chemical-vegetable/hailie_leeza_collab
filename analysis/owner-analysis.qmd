@@ -56,5 +56,82 @@ head(lobster_abundance_subset)
 range(lobster_abundance_subset$SIZE_MM)
 ```
 
+## Exercise: Data Visualization
+Histogram of lobster sizes
+```{r}
+lobs_abund_hist <- ggplot(data = lobster_abundance,
+       aes(x = SIZE_MM)) +
+  geom_histogram()+
+  facet_wrap(~SITE) + 
+  labs(x = "Carapace Size (mm)",
+       y = "Number of Lobsters",
+       title = "Size Distribution of Lobsters")
+
+lobs_abund_hist
+
+ggsave("../figs/lobs_abund_hist.png", plot = lobs_abund_hist, width = 12, height = 6, units = "in")
+```
+count lobsters each year at each site
+```{r}
+lobsters_summarize <- lobster_abundance %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(COUNT = n())
+
+head(lobsters_summarize)
+```
+plot lobster count
+```{r}
+lob_counts <- ggplot(data = lobsters_summarize,
+       aes(x = YEAR,
+           y = COUNT,
+           color = SITE)) + 
+  geom_line() +
+  geom_point() +
+  labs(x = "Year",
+       y = "Number of Lobsters",
+       title = "Lobster count through time at each site",
+       color = "Site") +
+  theme_light() +
+  scale_x_continuous(breaks = seq(2012,2022,2))
+
+lob_counts
+
+ggsave("../figs/lobs_counts.png", plot = lob_counts width = 12, height = 8, units = "in")
+  
+```
+
+filter for large lobsters
+```{r}
+lobster_size_lrg <- lobster_abundance %>% 
+  filter(YEAR == c(2019, 2020, 2021)) %>% 
+  mutate(SIZE_BIN = if_else(condition = SIZE_MM <= 70, "small", "large")) %>% 
+  group_by(SITE, SIZE_BIN) %>% 
+  summarise(COUNT = n()) %>%
+  drop_na()
+
+head(lobster_size_lrg)
+```
+
+create bar plot
+```{r}
+lobs_size_count <- ggplot(lobster_size_lrg, 
+       aes(x = SITE, 
+           y = COUNT, 
+           fill = SIZE_BIN)) +
+  geom_col(position = "dodge") +
+  labs(x = "Site",
+       y = "Number of Lobsters",
+       fill = "Size",
+       title = "Lobster Sizes at Each Site") +
+  theme_bw()
+
+lobs_size_count 
+
+ggsave("../figs/lobs_size_count.png", width = 12, height = 8, units = "in")
+```
+
+
+
+
 
 
