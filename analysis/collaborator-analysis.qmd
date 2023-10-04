@@ -29,10 +29,10 @@ head(lobster_traps)
 ## Convert missing values using `mutate()` and `na_if()`
 ```{r}
 
-lobster_traps_clean <- lobster_traps %>% 
+lobster_traps <- lobster_traps %>% 
   mutate(TRAPS = na_if(TRAPS, -99999))
 
-unique(lobster_traps_clean$TRAPS)
+unique(lobster_traps$TRAPS)
 ```
 
 ## `filter()` practice
@@ -48,7 +48,51 @@ lobster_traps_subset <- lobster_traps_clean %>%
 head(lobster_traps_subset)
 ```
 
+## Exercise: Data Visulization
+```{r}
+ggplot(data = lobster_traps,
+       aes(x = TRAPS))+ 
+  geom_histogram()+
+  facet_wrap(~ YEAR)
+```
 
+* create a line graph of the number of total lobster commercial traps observed (y-axis) by year (x-axis) in the study, grouped by SITE.
+```{r}
+
+# first create a new data subset
+lobsters_traps_summarize <- lobster_traps %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(TOTAL_TRAPS = sum(TRAPS, na.rm = TRUE))
+
+# now create the line graph 
+# line plot
+ggplot(data = lobsters_traps_summarize, aes(x = YEAR, y = TOTAL_TRAPS)) +
+    geom_line(aes(color = SITE))
+
+# line and point plot
+ggplot(data = lobsters_traps_summarize, aes(x = YEAR, y = TOTAL_TRAPS)) +
+    geom_point(aes(color = SITE)) +
+    geom_line(aes(color = SITE))
+
+# bar graph that shows the amount of high and low fishing pressure of lobster commercial traps at each site from 2019-2021
+
+# first create a new data subset
+
+lobster_traps_fishing_pressure <- lobster_traps %>% 
+  filter(YEAR %in% c("2019" , "2020" , "2021")) %>% 
+  mutate(FISHING_PRESSURE = if_else(TRAPS > 8, true = "high", false = "low")) %>% 
+           group_by(SITE, FISHING_PRESSURE) %>% 
+           summarize(COUNT = n()) %>% 
+           drop_na()
+# create a bar graph using ggplot()
+ 
+ggplot(data = lobster_traps_fishing_pressure,
+       aes(x = SITE, 
+           y = COUNT, 
+           fill = FISHING_PRESSURE))+
+  geom_col(position = "dodge")
+ 
+```
 
 
 
