@@ -1,25 +1,40 @@
 ---
 title: "Owner analysis"
 format: html
+author: "Hailie Kittner"
 ---
 
-## Quarto
+## Exercise: Explore, Clean, and Wrangle Data
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+### Setup
 
 ```{r}
-1 + 1
+#| warning: false
+#| message: false
+
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
 ```
 
-You can add options to executable code like this 
+### Read Data
 
 ```{r}
-#| echo: false
-2 * 2
+#| message: false
+
+
+lobster_abundance <- read_csv("../data/Lobster_Abundance_All_Years_20220829.csv")
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+### Explore data
+
+```{r}
+names(lobster_abundance)
+
+str(lobster_abundance)
+
+summary(lobster_abundance)
+```
+
+
